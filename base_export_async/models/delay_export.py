@@ -68,9 +68,12 @@ class DelayExport(models.Model):
             'name': "{}.{}".format(model_name, export_format),
             'datas': base64.b64encode(result),
             'datas_fname': "{}.{}".format(model_name, export_format),
-            'type': 'binary'
+            'type': 'binary',
+            'to_delete': True,
         })
+        _logger.info("")
 
+        # TODO: ADD url of attachment
         odoobot = self.env.ref("base.partner_root")
         email_from = odoobot.email
         self.env['mail.mail'].create({
@@ -81,6 +84,6 @@ class DelayExport(models.Model):
                 model_name, fields.Date.to_string(fields.Date.today())),
             'body_html': _("This is an automated \
                 message please do not reply."),
-            'attachment_ids': [(4, attachment.id)],
+            # 'attachment_ids': [(4, attachment.id)],
             'auto_delete': True,
         })
